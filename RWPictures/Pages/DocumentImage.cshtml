@@ -1,0 +1,20 @@
+﻿@using RWPictures.Entities;
+@using RWPictures.PL;
+@using RWPictures.IBLC;
+@using System.Drawing;
+@using System.Drawing.Imaging;
+
+@{
+    Layout = null;
+    Response.ContentType = "image/gif";
+
+
+    byte[] picture = LogicProvider.Logic.GetImageFromFile("~/Documents/1.pdf");
+
+    if (picture != null)
+    {
+        Response.BinaryWrite(picture);
+    }
+}
+
+
