@@ -1,4 +1,6 @@
 ﻿using RWPictures.IBLC;
+using RWPictures.DAL;
+using RWPictures.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,6 +26,11 @@ namespace RWPictures.BLL
             }
 
             return new MemoryStream(data).ToArray();
+        }
+
+        public IEnumerable<DocumentInfo> GetDocumentsInfo()
+        {
+            return DataAccessProvider.DBAccessor.GetDocumentsInfo();
         }
 
         public bool ReturnTrue()

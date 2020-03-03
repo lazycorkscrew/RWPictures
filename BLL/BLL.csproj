@@ -55,6 +55,10 @@
       <Project>{F7651FB1-59CD-470B-90C1-23B89D2F9928}</Project>
       <Name>DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{C54F3F1B-2E3E-4B1D-A50B-F40AD0AFFFEC}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IBLC\IBLC.csproj">
       <Project>{10FFC116-957B-4937-BC4F-EB8FA8EBD691}</Project>
       <Name>IBLC</Name>

@@ -1,0 +1,27 @@
+﻿@using RWPictures.Entities;
+@using RWPictures.PL;
+@using RWPictures.IBLC;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+
+    List<DocumentInfo> documentsInfo = LogicProvider.Logic.GetDocumentsInfo() as List<DocumentInfo>;
+    int docsCount = documentsInfo.Count;
+
+    <div class="documents">
+        <div class="document_create">
+            <div>
+                <div>Всего загружено документов: @docsCount</div>
+                <div>Вы можете <a href="/">Добавить документы</a></div>
+            </div>
+        </div>
+        <div class="documents_list">
+            @for (int i = 0; i < docsCount; i++)
+            {
+                <div><a href="">@documentsInfo[i].Name @documentsInfo[i].Project</a> </div>
+            }
+        </div>
+    </div>
+
+}
+
+

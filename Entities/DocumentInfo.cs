@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace RWPictures.Entities
 {
-    public class Class1
+    public class DocumentInfo
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Project { get; set; }
     }
 }

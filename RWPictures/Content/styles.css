@@ -1,0 +1,49 @@
+﻿body {
+}
+
+.documents {
+
+}
+
+.documents_list {
+    background-color: #EEEEFF;
+    padding: 10px 0;
+    width: 90%;
+    margin: 0 auto;
+}
+
+    .documents_list > div {
+        background-color: #E0E0FF;
+        padding: 10px 0px;
+        width: 85%;
+        text-indent: 11px;
+        margin: 10px auto;
+    }
+
+.document_create {
+    background-color: #EEEEFF;
+    padding: 10px 0px;
+    width: 90%;
+
+    margin: 10px auto;
+}
+
+.document_create > div {
+    /*background-color: yellow;*/
+    padding: 0px 0px;
+    width: 85%;
+    margin: 10px auto;
+}
+
+    .document_create > div > div {
+        /*background-color: blue;*/
+        width: 50%;
+        height: 100%;
+        margin-right: -4px;
+        text-align: center;
+        display: inline-block;
+    }
+
+.document_create > div > div > a {
+    /*background-color: red;*/
+}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RWPictures.Entities;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace RWPictures.IBLC
     public interface ILogicContracts
     {
         byte[] GetImageFromFile(string filePath);
-
+        IEnumerable<DocumentInfo> GetDocumentsInfo();
         bool ReturnTrue();
 
     }

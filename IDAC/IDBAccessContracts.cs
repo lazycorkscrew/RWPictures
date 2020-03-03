@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RWPictures.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace RWPictures.IDAC
 {
     public interface IDBAccessContracts
     {
+        IEnumerable<DocumentInfo> GetDocumentsInfo();
     }
 }
