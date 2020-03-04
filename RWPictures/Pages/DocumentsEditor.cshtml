@@ -1,27 +1,71 @@
 ﻿@using RWPictures.Entities;
 @using RWPictures.PL;
-@using RWPictures.IBLC;
 @{
     Layout = "~/Layouts/_MainLayout.cshtml";
 
-    List<DocumentInfo> documentsInfo = LogicProvider.Logic.GetDocumentsInfo() as List<DocumentInfo>;
-    int docsCount = documentsInfo.Count;
+    string act = Request["act"];
 
-    <div class="documents">
-        <div class="document_create">
-            <div>
-                <div>Всего загружено документов: @docsCount</div>
-                <div>Вы можете <a href="/">Добавить документы</a></div>
-            </div>
-        </div>
-        <div class="documents_list">
-            @for (int i = 0; i < docsCount; i++)
-            {
-                <div><a href="">@documentsInfo[i].Name @documentsInfo[i].Project</a> </div>
-            }
+    if (!string.IsNullOrEmpty(act))
+    {
+        switch (act)
+        {
+            case "add":
+                {
+                    string[] projects = LogicProvider.Logic.GetAllProjects().ToArray();
+                    <form action="~/Commands/DocumentsUploader.cshtml" enctype="multipart/form-data" method="post">
+                        <p>Загрузите ваши фотографии на сервер</p>
+                        <p>
+                            <input type="text" name="doc_name" placeholder="Имя файла"/>
+                        </p>
+                        <p>
+                            <input type="text" name="project" list="projects" placeholder="Проект">
+                            <datalist id="projects">
+                                @for (int i = 0; i < projects.Length; i++)
+                                {
+                                    <option value="@projects[i]" />
+                                 }
+                            </datalist>
+                        </p>
+                        <p>
+                            <input type="Text" name="comment" placeholder="Комментарий" />
+                        </p>
+                        <p>
+                            <input type="file" name="documents" multiple accept="image/*,image/jpeg">
+                        </p>
+                        <p>
+                            <input type="submit" value="Отправить">
+                        </p>
+                    </form>
+                }
+
+                <div>Загрузите ваши файлы</div>; break;
+default: <div>Команда не распознана.</div>; break;
+}
+
+
+
+
+}
+else
+{
+List<DocumentInfo> documentsInfo = LogicProvider.Logic.GetDocumentsInfo() as List<DocumentInfo>;
+int docsCount = documentsInfo.Count;
+
+<div class="documents">
+    <div class="document_create">
+        <div>
+            <div>Всего загружено документов: @docsCount</div>
+            <div>Вы можете <a href="~/Pages/DocumentsEditor.cshtml?act=add">Добавить документы</a></div>
         </div>
     </div>
-
+    <div class="documents_list">
+        @for (int i = 0; i < docsCount; i++)
+        {
+            <div><a href="~/Pages/DocumentsEditor.cshtml?doc_id=@documentsInfo[i].Id">@documentsInfo[i].Name @documentsInfo[i].Project</a> </div>
+        }
+    </div>
+</div>
+}
 }
 
 

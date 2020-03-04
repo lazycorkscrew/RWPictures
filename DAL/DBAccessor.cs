@@ -14,6 +14,58 @@ namespace RWPictures.DAL
     {
         public static string connectionString = "Data Source=ХИМИК-ПК\\SQLEXPRESS; Initial Catalog=RewritePictures; Integrated Security=True";// False; User Id=; Password=" 
 
+        public bool AttachImageToDocument(int docId, byte[] image)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("AttachImageToDocument", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@doc_id", docId);
+                command.Parameters.AddWithValue("@image", image);
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
+        public int CreateDocument(string name, string project, string comment)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("CreateDocument", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@project", project);
+                command.Parameters.AddWithValue("@comment", comment);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return (int)reader["Id"];
+                }
+
+                return 0;
+            }
+        }
+
+        public IEnumerable<string> GetAllProjects()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetAllProjects", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                List<string> projects = new List<string>();
+                while (reader.Read())
+                {
+                    projects.Add((string)reader["Project"]);
+                }
+
+                return projects;
+            }
+        }
+
         public IEnumerable<DocumentInfo> GetDocumentsInfo()
         {
             using (SqlConnection connection = new SqlConnection(connectionString))

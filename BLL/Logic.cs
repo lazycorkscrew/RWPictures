@@ -33,9 +33,25 @@ namespace RWPictures.BLL
             return DataAccessProvider.DBAccessor.GetDocumentsInfo();
         }
 
-        public bool ReturnTrue()
+        public IEnumerable<string> GetAllProjects()
         {
-            throw new NotImplementedException();
+            return DataAccessProvider.DBAccessor.GetAllProjects();
+        }
+
+        public bool GenerateDocument(string name, string project, string comment, IEnumerable<byte[]> images)
+        {
+            int docId = DataAccessProvider.DBAccessor.CreateDocument(name, project, comment);
+            List<byte[]> byteImages = images as List<byte[]>;
+            int imagesCount = byteImages.Count;
+            for (int i = 0; i < imagesCount; i++)
+            {
+                if(!DataAccessProvider.DBAccessor.AttachImageToDocument(docId, byteImages[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

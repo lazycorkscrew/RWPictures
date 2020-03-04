@@ -1,0 +1,39 @@
+﻿@using RWPictures.Entities;
+@using RWPictures.PL;
+@{
+    Layout = null;
+
+    if (IsPost)
+    {
+        HttpFileCollectionBase files = Request.Files;
+
+        List<byte[]> images = new List<byte[]>();
+
+        int filesCount = files.Count;
+        for (int i = 0; i < filesCount; i++)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                files[i].InputStream.CopyTo(ms);
+                images.Add(ms.ToArray());
+            }
+        }
+
+        string name = Request["doc_name"];
+        string project = Request["project"];
+        string comment = Request["comment"];
+
+        if (!string.IsNullOrEmpty(name) 
+            && !string.IsNullOrEmpty(project) 
+            && !string.IsNullOrEmpty(comment) 
+            && filesCount > 0
+            && LogicProvider.Logic.GenerateDocument(name, project, comment, images))
+        {
+            <div>Документ создан успешно</div>
+        }
+        else
+        {
+            <div>Ошибка создания документа</div>
+        }
+    }
+}

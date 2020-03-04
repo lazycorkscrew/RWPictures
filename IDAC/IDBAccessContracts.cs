@@ -10,5 +10,8 @@ namespace RWPictures.IDAC
     public interface IDBAccessContracts
     {
         IEnumerable<DocumentInfo> GetDocumentsInfo();
+        IEnumerable<string> GetAllProjects();
+        int CreateDocument(string name, string project, string comment);
+        bool AttachImageToDocument(int docId, byte[] image);
     }
 }

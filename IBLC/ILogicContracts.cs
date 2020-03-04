@@ -12,7 +12,8 @@ namespace RWPictures.IBLC
     {
         byte[] GetImageFromFile(string filePath);
         IEnumerable<DocumentInfo> GetDocumentsInfo();
-        bool ReturnTrue();
+        IEnumerable<string> GetAllProjects();
+        bool GenerateDocument(string name, string project, string comment, IEnumerable<byte[]> images);
 
     }
 }
