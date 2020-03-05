@@ -14,6 +14,19 @@ namespace RWPictures.DAL
     {
         public static string connectionString = "Data Source=ХИМИК-ПК\\SQLEXPRESS; Initial Catalog=RewritePictures; Integrated Security=True";// False; User Id=; Password=" 
 
+        public bool AddFieldToPattern(string pattern, string fieldName)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("AddFieldToPattern", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@pattern_name", pattern);
+                command.Parameters.AddWithValue("@field_name", fieldName);
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
         public bool AttachImageToDocument(int docId, byte[] image)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -27,7 +40,7 @@ namespace RWPictures.DAL
             }
         }
 
-        public int CreateDocument(string name, string project, string comment)
+        public int CreateDocument(string name, string project, string comment, string pattern)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -36,6 +49,7 @@ namespace RWPictures.DAL
                 command.Parameters.AddWithValue("@name", name);
                 command.Parameters.AddWithValue("@project", project);
                 command.Parameters.AddWithValue("@comment", comment);
+                command.Parameters.AddWithValue("@pattern", pattern);
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
@@ -45,6 +59,24 @@ namespace RWPictures.DAL
                 }
 
                 return 0;
+            }
+        }
+
+        public IEnumerable<string> GetAllPatterns()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetAllPatterns", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                List<string> projects = new List<string>();
+                while (reader.Read())
+                {
+                    projects.Add((string)reader["PatternName"]);
+                }
+
+                return projects;
             }
         }
 
@@ -85,6 +117,39 @@ namespace RWPictures.DAL
                 }
 
                 return documentsInfo;
+            }
+        }
+
+        public Dictionary<int, string> GetPatternFields(string pattern)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetPatternFields", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@pattern_name", pattern);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                Dictionary<int, string> patterns = new Dictionary<int, string>();
+                while (reader.Read())
+                {
+                    patterns.Add((int)reader["Id"], (string)reader["FieldName"]);
+                }
+
+                return patterns;
+            }
+        }
+
+        public bool RemovePatternField(string pattern, int fieldId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("RemovePatternField", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@pattern_name", pattern);
+                command.Parameters.AddWithValue("@field_id", fieldId);
+                connection.Open();
+                bool a = command.ExecuteNonQuery() == 1;
+                return a;
             }
         }
     }

@@ -13,7 +13,11 @@ namespace RWPictures.IBLC
         byte[] GetImageFromFile(string filePath);
         IEnumerable<DocumentInfo> GetDocumentsInfo();
         IEnumerable<string> GetAllProjects();
-        bool GenerateDocument(string name, string project, string comment, IEnumerable<byte[]> images);
+        IEnumerable<string> GetAllPatterns();
+        Dictionary<int, string> GetPatternFields(string pattern);
+        bool AddFieldToPattern(string pattern, string fieldName);
+        bool RemovePatternField(string pattern, int fieldId);
+        bool GenerateDocument(string name, string project, string comment, string pattern, IEnumerable<byte[]> images);
 
     }
 }

@@ -12,6 +12,7 @@
             case "add":
                 {
                     string[] projects = LogicProvider.Logic.GetAllProjects().ToArray();
+                    string[] patterns = LogicProvider.Logic.GetAllPatterns().ToArray();
                     <form action="~/Commands/DocumentsUploader.cshtml" enctype="multipart/form-data" method="post">
                         <p>Загрузите ваши фотографии на сервер</p>
                         <p>
@@ -20,11 +21,19 @@
                         <p>
                             <input type="text" name="project" list="projects" placeholder="Проект">
                             <datalist id="projects">
-                                @for (int i = 0; i < projects.Length; i++)
-                                {
+                                 @for (int i = 0; i < projects.Length; i++)
+                                 {
                                     <option value="@projects[i]" />
                                  }
                             </datalist>
+                        </p>
+                        <p>
+                            <select name="pattern" placeholder="Шаблон">
+                                @for (int i = 0; i < patterns.Length; i++)
+                                {
+                                <option value="@patterns[i]">@patterns[i]</option>
+                                }
+                            </select>
                         </p>
                         <p>
                             <input type="Text" name="comment" placeholder="Комментарий" />

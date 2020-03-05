@@ -101,6 +101,8 @@
     <None Include="packages.config" />
     <Content Include="Pages\DocumentImage.cshtml" />
     <Content Include="Pages\DocumentsEditor.cshtml" />
+    <Content Include="Pages\DocumentPage.cshtml" />
+    <Content Include="Pages\PatternsEditor.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

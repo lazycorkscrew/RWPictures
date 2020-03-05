@@ -1,0 +1,66 @@
+﻿@using RWPictures.Entities;
+@using RWPictures.PL;
+@{
+    Layout = null;
+
+    string pattern = Request["pattern"];
+
+
+    if (!string.IsNullOrEmpty(pattern))
+    {
+        string act = Request["act"];
+
+        if (!string.IsNullOrEmpty(act))
+        {
+            switch (act)
+            {
+                case "remove_field":
+                    {
+                        if (!int.TryParse(Request["id"], out int id) & !LogicProvider.Logic.RemovePatternField(pattern, id))
+                        {
+                            <div>Что-то пошло не так с удалением.</div>
+                        }
+
+                        break;
+                    }
+                case "add_field":
+                    {
+                        string fieldName = Request["field_name"];
+                        if (string.IsNullOrEmpty(fieldName) & !LogicProvider.Logic.AddFieldToPattern(pattern, fieldName))
+                        {
+                            <div>Что-то пошло не так с добавлением.</div>
+                        }
+
+                        break;
+                    }
+
+                default: break;
+            }
+        }
+
+        Dictionary<int, string> fields = LogicProvider.Logic.GetPatternFields(pattern);
+
+        foreach (KeyValuePair<int, string> field in fields)
+        {
+            <p>@field.Value <a href="~/Pages/PatternsEditor.cshtml?pattern=@pattern&act=remove_field&id=@field.Key">Удалить</a></p>
+        }
+            <form action="~/Pages/PatternsEditor.cshtml?pattern=@pattern&act=add_field" method="get">
+                <input type="text" name="field_name" />
+                <button>Добавить</button>
+            </form>
+
+    }
+    else
+    {
+
+        string[] patterns = LogicProvider.Logic.GetAllPatterns().ToArray();
+
+            <div>
+                @for (int i = 0; i < patterns.Length; i++)
+                {
+                    <p><a href="~/Pages/PatternsEditor.cshtml?pattern=@patterns[i]">@patterns[i]</a></p>
+                }
+            </div>
+
+        }
+    }

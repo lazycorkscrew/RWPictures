@@ -38,9 +38,14 @@ namespace RWPictures.BLL
             return DataAccessProvider.DBAccessor.GetAllProjects();
         }
 
-        public bool GenerateDocument(string name, string project, string comment, IEnumerable<byte[]> images)
+        public IEnumerable<string> GetAllPatterns()
         {
-            int docId = DataAccessProvider.DBAccessor.CreateDocument(name, project, comment);
+            return DataAccessProvider.DBAccessor.GetAllPatterns();
+        }
+
+        public bool GenerateDocument(string name, string project, string comment, string pattern, IEnumerable<byte[]> images)
+        {
+            int docId = DataAccessProvider.DBAccessor.CreateDocument(name, project, comment, pattern);
             List<byte[]> byteImages = images as List<byte[]>;
             int imagesCount = byteImages.Count;
             for (int i = 0; i < imagesCount; i++)
@@ -52,6 +57,21 @@ namespace RWPictures.BLL
             }
 
             return true;
+        }
+
+        public Dictionary<int, string> GetPatternFields(string pattern)
+        {
+            return DataAccessProvider.DBAccessor.GetPatternFields(pattern);
+        }
+
+        public bool RemovePatternField(string pattern, int fieldId)
+        {
+            return DataAccessProvider.DBAccessor.RemovePatternField(pattern, fieldId);
+        }
+
+        public bool AddFieldToPattern(string pattern, string fieldName)
+        {
+            return DataAccessProvider.DBAccessor.AddFieldToPattern(pattern, fieldName);
         }
     }
 }
