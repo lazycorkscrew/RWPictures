@@ -30,5 +30,6 @@ namespace RWPictures.IBLC
         bool MoveImageToCheck(int imageId);
         IEnumerable<Field> GetFirstImageFieldsForCheck(int checkerId);
         int GetImageIdForCheck(int checkerId);
+        bool SetVerdictForImage(int imageId, int checkerId, int verdict);
     }
 }

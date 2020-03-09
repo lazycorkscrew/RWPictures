@@ -7,26 +7,42 @@
 
     if (user != null)
     {
-        List<Field> fields = LogicProvider.Logic.GetFirstImageFieldsForCheck(user.Id) as List<Field>;
-        int fieldsCount = fields.Count;
-        int imageId = LogicProvider.Logic.GetImageIdForCheck(user.Id);
+        if (int.TryParse(Request["verdict"], out int verdict) && int.TryParse(Request["image_id"], out int imageIdForCheck))
+        {
+            if(!LogicProvider.Logic.SetVerdictForImage(imageIdForCheck, user.Id, verdict))
+            {
+                <div>Чёта пошло не так.</div>
+            }
+            else
+            {
+                Response.Redirect("~/Pages/Checker.cshtml");
+            }
+        }
+        else
+        {
+            List<Field> fields = LogicProvider.Logic.GetFirstImageFieldsForCheck(user.Id) as List<Field>;
+            int fieldsCount = fields.Count;
+            int imageId = LogicProvider.Logic.GetImageIdForCheck(user.Id);
 
-        <div>
-            <div class="workflow_left">
-                <img src="~/Pages/DocumentImage.cshtml?id=@imageId" />
-            </div>
-            <div class="workflow_right">
+<div>
+    <div class="workflow">123</div>
+    <div class="workflow_left">
+        <img src="~/Pages/DocumentImage.cshtml?id=@imageId" />
+    </div>
+    <div class="workflow_right">
 
-                <input type="hidden" name="image_id" value="@imageId" />
-                @for (int i = 0; i < fieldsCount; i++)
-                {
+
+        @for (int i = 0; i < fieldsCount; i++)
+        {
             <p>@fields[i].Name: @fields[i].Value</p>
-                }
-            <form action="~/Pages/Checker.cshtml" method="post">
-                <button name="confirm" value="1">Утвердить</button>
-                <button name="confirm" value="0">Попросить исправить</button>
-            </form>
-            </div>
-        </div>
+        }
+        <form action="~/Pages/Checker.cshtml" method="post">
+            <input type="hidden" name="image_id" value="@imageId" />
+            <button name="verdict" value="1">Утвердить</button>
+            <button name="verdict" value="0">Попросить исправить</button>
+        </form>
+    </div>
+</div>
+        }
     }
 }

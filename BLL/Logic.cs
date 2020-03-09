@@ -144,5 +144,10 @@ namespace RWPictures.BLL
         {
             return DataAccessProvider.DBAccessor.GetImageIdForCheck(checkerId);
         }
+
+        public bool SetVerdictForImage(int imageId, int checkerId, int verdict)
+        {
+            return DataAccessProvider.DBAccessor.SetVerdictForImage(imageId, checkerId, verdict);
+        }
     }
 }

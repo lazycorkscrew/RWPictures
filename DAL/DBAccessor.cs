@@ -352,5 +352,19 @@ namespace RWPictures.DAL
                 return a;
             }
         }
+
+        public bool SetVerdictForImage(int imageId, int checkerId, int verdict)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("SetVerdictForImage", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@image_id", imageId);
+                command.Parameters.AddWithValue("@checker_id", checkerId);
+                command.Parameters.AddWithValue("@verdict", verdict);
+                connection.Open();
+                return command.ExecuteNonQuery() >= 1;
+            }
+        }
     }
 }
