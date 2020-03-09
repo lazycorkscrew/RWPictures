@@ -36,7 +36,20 @@
 <body>
     <div class="pattern">
         <div>
-            <div class="pattern_header">Хедер</div>
+            <div class="pattern_header">
+                <div class="user_panel">
+                    @{ 
+                        if (user != null)
+                        {
+                            <span>@(user.Fname)</span> <span>@(user.Lname)</span> <a href="~/Commands/Logout.cshtml">Выйти</a>
+                        }
+                        else
+                        {
+                            <a href="~/Pages/AuthForm.aspx">Войти</a>
+                        }
+                    }
+                </div>
+            </div>
             <div class="pattern_left">
                 @RenderPage("~/Pages/MenuPage.cshtml")
             </div>

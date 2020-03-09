@@ -90,6 +90,8 @@
   <ItemGroup>
     <Content Include="Content\styles.css" />
     <Content Include="Commands\DocumentsUploader.cshtml" />
+    <Content Include="Commands\Logout.cshtml" />
+    <Content Include="Layouts\_AuthPattern.cshtml" />
     <None Include="Layouts\_MainLayout.cshtml" />
     <Content Include="Pages\AuthForm.aspx" />
     <Content Include="Web.config" />
@@ -117,6 +119,7 @@
     <Content Include="Pages\Registration.cshtml" />
     <Content Include="Pages\ImageFinisher.cshtml" />
     <Content Include="Pages\Checker.cshtml" />
+    <Content Include="Pages\HaveNotPermission.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

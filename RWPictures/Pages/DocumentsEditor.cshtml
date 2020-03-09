@@ -3,78 +3,96 @@
 @{
     Layout = "~/Layouts/_MainLayout.cshtml";
 
+    User user = Session["user"] as User;
+
     string act = Request["act"];
 
-    if (!string.IsNullOrEmpty(act))
-    {
-        switch (act)
+    if (user != null && user.Rights >= 2)
+    { 
+        if (!string.IsNullOrEmpty(act))
         {
-            case "add":
-                {
-                    string[] projects = LogicProvider.Logic.GetAllProjects().ToArray();
-                    string[] patterns = LogicProvider.Logic.GetAllPatterns().ToArray();
-                    <form action="~/Commands/DocumentsUploader.cshtml" enctype="multipart/form-data" method="post">
-                        <p>Загрузите ваши фотографии на сервер</p>
-                        <p>
-                            <input type="text" name="doc_name" placeholder="Имя файла"/>
-                        </p>
-                        <p>
-                            <input type="text" name="project" list="projects" placeholder="Проект">
-                            <datalist id="projects">
-                                 @for (int i = 0; i < projects.Length; i++)
-                                 {
-                                    <option value="@projects[i]" />
-                                 }
-                            </datalist>
-                        </p>
-                        <p>
-                            <select name="pattern" placeholder="Шаблон">
-                                @for (int i = 0; i < patterns.Length; i++)
-                                {
-                                <option value="@patterns[i]">@patterns[i]</option>
-                                }
-                            </select>
-                        </p>
-                        <p>
-                            <input type="Text" name="comment" placeholder="Комментарий" />
-                        </p>
-                        <p>
-                            <input type="file" name="documents" multiple accept="image/*,image/jpeg">
-                        </p>
-                        <p>
-                            <input type="submit" value="Отправить">
-                        </p>
-                    </form>
-                }
+            switch (act)
+            {
+                case "add":
+                    {
+                        string[] projects = LogicProvider.Logic.GetAllProjects().ToArray();
+                        string[] patterns = LogicProvider.Logic.GetAllPatterns().ToArray();
+                        <form action="~/Commands/DocumentsUploader.cshtml" enctype="multipart/form-data" method="post">
+                            <p>
+                                <input type="text" name="doc_name" placeholder="Имя файла"/>
+                            </p>
+                            <p>
+                                <input type="text" name="project" list="projects" placeholder="Проект">
+                                <datalist id="projects">
+                                     @for (int i = 0; i < projects.Length; i++)
+                                     {
+                                        <option value="@projects[i]" />
+                                     }
+                                </datalist>
+                            </p>
+                            <p>
+                                <select name="pattern" placeholder="Шаблон">
+                                    @for (int i = 0; i < patterns.Length; i++)
+                                    {
+                                    <option value="@patterns[i]">@patterns[i]</option>
+                                    }
+                                </select>
+                            </p>
+                            <p>
+                                <input type="Text" name="comment" placeholder="Комментарий" />
+                            </p>
+                            <p>
+                                <input type="file" name="documents" multiple accept="image/*,image/jpeg">
+                            </p>
+                            <p>
+                                <input type="submit" value="Отправить">
+                            </p>
+                        </form>
+                    }; break;
 
-                <div>Загрузите ваши файлы</div>; break;
-default: <div>Команда не распознана.</div>; break;
-}
-
-
-
-
-}
-else
-{
-List<DocumentInfo> documentsInfo = LogicProvider.Logic.GetDocumentsInfo() as List<DocumentInfo>;
-int docsCount = documentsInfo.Count;
-
-<div class="documents">
-    <div class="document_create">
-        <div>
-            <div>Всего загружено документов: @docsCount</div>
-            <div>Вы можете <a href="~/Pages/DocumentsEditor.cshtml?act=add">Добавить документы</a></div>
-        </div>
-    </div>
-    <div class="documents_list">
-        @for (int i = 0; i < docsCount; i++)
-        {
-            <div><a href="~/Pages/DocumentsEditor.cshtml?doc_id=@documentsInfo[i].Id">@documentsInfo[i].Name @documentsInfo[i].Project</a> </div>
+                case "remove":
+                    {
+                        if(int.TryParse(Request["doc_id"], out int docId))
+                        {
+                            if (LogicProvider.Logic.RemoveDocument(docId))
+                            {
+                                Response.Redirect("~/Pages/DocumentsEditor.cshtml");
+                            }
+                            else
+                            {
+                                <div class="error_style">Невозможно удалить документ.</div>
+                            }
+                        }
+                        break;
+                    }
+                default: <div>Команда не распознана.</div>; break;
+            }
         }
-    </div>
-</div>
-}
+        else
+        {
+            List<DocumentInfo> documentsInfo = LogicProvider.Logic.GetDocumentsInfo() as List<DocumentInfo>;
+            int docsCount = documentsInfo.Count;
+
+            <div class="documents">
+                <div class="document_create">
+                    <div>
+                        <div>Всего загружено документов: @docsCount</div>
+                        <div>Вы можете <a href="~/Pages/DocumentsEditor.cshtml?act=add">Добавить документы</a></div>
+                    </div>
+                </div>
+                <div class="documents_list">
+                    @for (int i = 0; i < docsCount; i++)
+                    {
+                        <div><a href="~/Pages/DocumentsEditor.cshtml?doc_id=@documentsInfo[i].Id">@documentsInfo[i].Name @documentsInfo[i].Project</a> <a href="~/Pages/DocumentsEditor.cshtml?act=remove&doc_id=@documentsInfo[i].Id">Удалить</a> </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        Response.Redirect("~/Pages/HaveNotPermission.cshtml");
+    }
 }
 
 

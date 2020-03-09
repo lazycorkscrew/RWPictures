@@ -7,42 +7,60 @@
 
     if (user != null)
     {
-        if (int.TryParse(Request["verdict"], out int verdict) && int.TryParse(Request["image_id"], out int imageIdForCheck))
+        if (user.Rights >= 2)
         {
-            if(!LogicProvider.Logic.SetVerdictForImage(imageIdForCheck, user.Id, verdict))
+            if (int.TryParse(Request["verdict"], out int verdict) && int.TryParse(Request["image_id"], out int imageIdForCheck))
             {
-                <div>Чёта пошло не так.</div>
+                if (!LogicProvider.Logic.SetVerdictForImage(imageIdForCheck, user.Id, verdict))
+                {
+                    <div>Чёта пошло не так.</div>
+                }
+                else
+                {
+                    Response.Redirect("~/Pages/Checker.cshtml");
+                }
             }
             else
             {
-                Response.Redirect("~/Pages/Checker.cshtml");
+                List<Field> fields = LogicProvider.Logic.GetFirstImageFieldsForCheck(user.Id) as List<Field>;
+                int fieldsCount = fields.Count;
+                int imageId = LogicProvider.Logic.GetImageIdForCheck(user.Id);
+
+                if (fieldsCount == 0 && imageId == 0)
+                {
+                    <div class="error_style">Нет документов для проверки.</div>
+                }
+                else
+                {
+                    <div class="workflow_left">
+                        <img src="~/Pages/DocumentImage.cshtml?id=@imageId" />
+                    </div>
+                    <div class="workflow_right">
+
+
+                        @for (int i = 0; i < fieldsCount; i++)
+                        {
+                            <p>@fields[i].Name: @fields[i].Value</p>
+                        }
+                        <form action="~/Pages/Checker.cshtml" method="post">
+                            <input type="hidden" name="image_id" value="@imageId" />
+                            <button name="verdict" value="1">Утвердить</button>
+                            <button name="verdict" value="0">Попросить исправить</button>
+                        </form>
+                    </div>
+                }
+
+
+
             }
         }
         else
         {
-            List<Field> fields = LogicProvider.Logic.GetFirstImageFieldsForCheck(user.Id) as List<Field>;
-            int fieldsCount = fields.Count;
-            int imageId = LogicProvider.Logic.GetImageIdForCheck(user.Id);
-
-<div>
-    <div class="workflow">123</div>
-    <div class="workflow_left">
-        <img src="~/Pages/DocumentImage.cshtml?id=@imageId" />
-    </div>
-    <div class="workflow_right">
-
-
-        @for (int i = 0; i < fieldsCount; i++)
-        {
-            <p>@fields[i].Name: @fields[i].Value</p>
+            Response.Redirect("~/Pages/HaveNotPermission.cshtml");
         }
-        <form action="~/Pages/Checker.cshtml" method="post">
-            <input type="hidden" name="image_id" value="@imageId" />
-            <button name="verdict" value="1">Утвердить</button>
-            <button name="verdict" value="0">Попросить исправить</button>
-        </form>
-    </div>
-</div>
-        }
+    }
+    else
+    {
+        Response.Redirect("~/index.cshtml");
     }
 }

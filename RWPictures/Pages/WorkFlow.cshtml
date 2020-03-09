@@ -13,25 +13,31 @@
         {
             List<string> fields = LogicProvider.Logic.GetImageFields(lid.DocumentId) as List<string>;
             int fieldsCount = fields.Count;
-            <div>
-                <div class="workflow">123</div>
-                <div class="workflow_left">
-                    <img src="~/Pages/DocumentImage.cshtml?id=@lid.ImageId" />
-                </div>
-                <div class="workflow_right">
-                    <form action="~/Pages/ImageFinisher.cshtml" method="post">
-                        <input type="hidden" name="image_id" value="@lid.ImageId" />
-                        @for (int i = 0; i < fieldsCount; i++)
-                        {
-                            <p>
-                                <input type="hidden" name="field[@i]" value="@fields[i]" />
-                                <input type="text" name="value[@i]" placeholder="@fields[i]" />
-                            </p>
-                        }
-                        <button>Отправить</button>
-                    </form>
-                </div>
-            </div>
+            
+                    <div class="workflow_left">
+                        <img src="~/Pages/DocumentImage.cshtml?id=@lid.ImageId" />
+                    </div>
+                    <div class="workflow_right">
+                        <form action="~/Pages/ImageFinisher.cshtml" method="post">
+                            <input type="hidden" name="image_id" value="@lid.ImageId" />
+                            @for (int i = 0; i < fieldsCount; i++)
+                            {
+                                <p>
+                                    <input type="hidden" name="field[@i]" value="@fields[i]" />
+                                    <input type="text" name="value[@i]" placeholder="@fields[i]" />
+                                </p>
+                            }
+                            <button>Отправить</button>
+                        </form>
+                    </div>
         }
+        else
+        {
+            <div class="error_style">Новых изображений пока нет.</div>
+        }
+    }
+    else
+    {
+        Response.Redirect("~/index.cshtml");
     }
 }

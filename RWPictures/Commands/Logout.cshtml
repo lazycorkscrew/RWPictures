@@ -1,0 +1,7 @@
+﻿@{
+    Response.Cookies["login"].Expires = DateTime.Now.AddDays(-1);
+    Response.Cookies["password"].Expires = DateTime.Now.AddDays(-1);
+    Session.Remove("user");
+    Response.Redirect("~/");
+}
+}

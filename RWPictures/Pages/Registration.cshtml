@@ -2,7 +2,7 @@
 @using RWPictures.PL;
 @using System.Text.RegularExpressions;
 @{
-    Layout = null;
+    Layout = "~/Layouts/_AuthPattern.cshtml";
 
 
     if (IsPost)
@@ -37,7 +37,7 @@
                 Response.Cookies.Add(loginCookie);
                 Response.Cookies.Add(passwordCookie);
 
-                Response.Redirect("~/AuthForm.aspx");
+                Response.Redirect("~/Pages/AuthForm.aspx");
             }
             else
             {
@@ -53,14 +53,14 @@
         }
     }
 }
-    <div class="reg_form">
+    <div>
         <div>
             <form action="~/Pages/Registration.cshtml" method="post">
-                Логин: <div><input type="text" name="login" /></div>
+                Логин: <div><input type="text" name="login" value="@(Request["login"] ?? string.Empty)" /></div>
                 Пароль: <div><input type="password" name="password" /></div>
-                Имя: <div><input type="text" name="fname" /></div>
-                Фамилия: <div><input type="text" name="lname" /></div>
-                Отчество: <div><input type="text" name="patronymic" /></div>
+                Имя: <div><input type="text" name="fname" value="@(Request["fname"] ?? string.Empty)" /></div>
+                Фамилия: <div><input type="text" name="lname" value="@(Request["lname"] ?? string.Empty)"/></div>
+                Отчество: <div><input type="text" name="patronymic" value="@(Request["patronymic"] ?? string.Empty)"/></div>
                 <button>Регистрация</button>
             </form>
         </div>

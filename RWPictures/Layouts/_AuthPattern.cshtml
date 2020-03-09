@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Layouts/_MainLayout.cshtml";
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -7,11 +7,12 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="~/Content/styles.css">
     <title></title>
 </head>
 <body>
-    <div>
-        Добро пожаловать.
+    <div class="auth_page">
+     @RenderBody()
     </div>
 </body>
 </html>

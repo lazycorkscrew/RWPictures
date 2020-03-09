@@ -20,6 +20,25 @@
     min-height: 600px;
 }
 
+    .pattern_left div {
+        margin: 20px auto;
+    }
+
+    .pattern_left div div {
+        background-color: #E0E0FF;
+        width: 80%;
+        height: 30px;
+        min-height: 20px;
+        text-align: center;
+        padding: 10px 0 0 0;
+    }
+
+        .pattern_left div div a {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-decoration: none;
+            color: black;
+        }
+
 .pattern_right {
 
     display: inline-block;
@@ -27,9 +46,55 @@
     min-height: 600px;
 }
 
-.documents {
-
+.user_panel {
+    background-color: #EEEEFF;
+    width: 20%;
+    float: right;
+    margin: 20px;
+    padding: 20px;
+    text-align:right;
 }
+
+.auth_page {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+
+    width: 60%;
+    margin: 0 auto;
+    background-color: #E0E0FF;
+    /*height: 200px;*/
+}
+    .auth_page > div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 1;
+        transform: translate(-50%, -50%);
+
+        background-color: #EEEEFF;
+        
+        padding: 20px;
+        text-align: center;
+        width: 40%;
+    }
+
+    .auth_page > div > div {
+        margin: 10px;
+        padding: 10px;
+        background-color: #E0E0FF;
+    }
+
+    .auth_page > div > div > input {
+        width: 90%;
+    }
+
+
+
+    .documents {
+    }
 
 .documents_list {
     background-color: #EEEEFF;
@@ -75,22 +140,41 @@
 }
 
 .workflow_left {
-    background-color: green;
     background-color: #EEEEFF;
     display: inline-block;
     float: left;
-    width: 60%;
+    width: 59%;
     min-height: 600px;
+    text-align:center;
+    padding: 20px 0;
 }
 
 .workflow_left img {
     width: 90%;
-    margin: 0 auto;
 }
 
 .workflow_right {
-    background-color: red;
+    background-color: #EEEEFF;
     display: inline-block;
     width: 40%;
     min-height: 600px;
+    margin-left: 1%;
+}
+
+.workflow {
+    background-color: #E0E0FF;
+    height: 80px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.error_style {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    background-color: #ffeeee;
+    color: #e01010;
+    padding: 40px;
 }

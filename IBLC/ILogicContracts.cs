@@ -31,5 +31,6 @@ namespace RWPictures.IBLC
         IEnumerable<Field> GetFirstImageFieldsForCheck(int checkerId);
         int GetImageIdForCheck(int checkerId);
         bool SetVerdictForImage(int imageId, int checkerId, int verdict);
+        bool RemoveDocument(int docId);
     }
 }

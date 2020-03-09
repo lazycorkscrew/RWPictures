@@ -326,6 +326,18 @@ namespace RWPictures.DAL
             }
         }
 
+        public bool RemoveDocument(int docId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("RemoveDocument", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@doc_id", docId);
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
         public bool RemovePattern(string pattern)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))

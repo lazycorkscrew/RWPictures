@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Data.SqlClient;
 
 namespace RWPictures.BLL
 {
@@ -102,7 +103,14 @@ namespace RWPictures.BLL
 
         public bool AddUser(string login, string password, string fname, string lname, string patronymic)
         {
-            return DataAccessProvider.DBAccessor.AddUser(login, password, fname, lname, patronymic);
+            try
+            {
+                return DataAccessProvider.DBAccessor.AddUser(login, password, fname, lname, patronymic);
+            }
+            catch(SqlException ex)
+            {
+                return false;
+            }
         }
 
         public LinkImageDoc GetImageIdForWork(int user_id)
@@ -148,6 +156,11 @@ namespace RWPictures.BLL
         public bool SetVerdictForImage(int imageId, int checkerId, int verdict)
         {
             return DataAccessProvider.DBAccessor.SetVerdictForImage(imageId, checkerId, verdict);
+        }
+
+        public bool RemoveDocument(int docId)
+        {
+            return DataAccessProvider.DBAccessor.RemoveDocument(docId);
         }
     }
 }
