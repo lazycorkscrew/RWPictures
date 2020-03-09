@@ -1,0 +1,99 @@
+﻿@using RWPictures.Entities;
+@using RWPictures.PL;
+@using System.Text.RegularExpressions;
+@{
+    Layout = null;
+
+
+    if (IsPost)
+    {
+        if (!string.IsNullOrWhiteSpace(Request["login"]) && !string.IsNullOrWhiteSpace(Request["password"]))
+        {
+            string errorMessage = string.Empty;
+
+            string login = Request["login"];
+            string password = LogicProvider.Logic.GetMd5Hash(Request["password"]);
+            string fname = Request["fname"];
+            string lname = Request["lname"];
+            string patronymic = Request["patronymic"];
+
+
+            bool regexedLogin = new Regex(@"^[A-z0-9][A-z0-9\-]{1,18}[A-z0-9]$").IsMatch(login);
+            bool regexedPass = new Regex(@"^[A-z0-9\-\!]{6,50}$").IsMatch(Request["password"]);
+            bool regexedFname = new Regex(@"(^[А-я\-]{2,50}$)|(^[A-z\-]{2,50}$)").IsMatch(fname);
+            bool regexedLname = new Regex(@"(^[А-я\-]{2,50}$)|(^[A-z\-]{2,50}$)").IsMatch(lname);
+            bool regexedPatronymic = new Regex(@"(^[А-я\-]{2,50}$)|(^[A-z\-]{2,50}$)").IsMatch(patronymic);
+            bool dbSuccess = false;
+
+            if (regexedLogin && regexedPass && regexedFname && regexedLname && regexedPatronymic
+                && LogicProvider.Logic.AddUser(login, password, fname, lname, patronymic))
+            {
+                dbSuccess = true;
+                HttpCookie loginCookie = new HttpCookie("login", login);
+                loginCookie.Expires = DateTime.Now.AddDays(10);
+                HttpCookie passwordCookie = new HttpCookie("password", password);
+                passwordCookie.Expires = DateTime.Now.AddDays(10);
+
+                Response.Cookies.Add(loginCookie);
+                Response.Cookies.Add(passwordCookie);
+
+                Response.Redirect("~/AuthForm.aspx");
+            }
+            else
+            {
+                errorMessage = string.Join("",
+                    (!regexedLogin ? "l" : string.Empty),
+                    (!regexedPass ? "p" : string.Empty),
+                    (!regexedFname ? "i" : string.Empty),
+                    (!regexedLname ? "f" : string.Empty),
+                    (!regexedPatronymic ? "o" : string.Empty),
+                    (!dbSuccess ? "b" : string.Empty));
+                Response.Redirect($"~/Pages/Registration/?error={errorMessage}");
+            }
+        }
+    }
+}
+    <div class="reg_form">
+        <div>
+            <form action="~/Pages/Registration.cshtml" method="post">
+                Логин: <div><input type="text" name="login" /></div>
+                Пароль: <div><input type="password" name="password" /></div>
+                Имя: <div><input type="text" name="fname" /></div>
+                Фамилия: <div><input type="text" name="lname" /></div>
+                Отчество: <div><input type="text" name="patronymic" /></div>
+                <button>Регистрация</button>
+            </form>
+        </div>
+
+        @{
+            string errorString = Request["error"] ?? string.Empty;
+
+            if (errorString.Contains("f"))
+            {
+                <div>Фамилия должна состоять либо только из русских букв, либо только из английских. Длина должна быть от 2 до 50-ти символов.</div>
+            }
+            if (errorString.Contains("i"))
+            {
+                <div>Имя должно состоять либо только из русских букв, либо только из английских. Длина должна быть от 2 до 50-ти символов.</div>
+            }
+            if (errorString.Contains("o"))
+            {
+                <div>Отчество должно состоять либо только из русских букв, либо только из английских. Длина должна быть от 2 до 50-ти символов.</div>
+            }
+
+            if (errorString.Contains("l"))
+            {
+                <div>Логин должен состоять из английский букв, цифр, дефиса (-), начинаться и заканчиваться должен с английской буквы, или цифры. Длина логина от 3-х до 20-ти символов.</div>
+            }
+            if (errorString.Contains("p"))
+            {
+                <div>Пароль должен быть длиной от 6-ти до 50-ти символов, и состоять из английских букв, цифр, дефиса (-) и восклицательного знака (!)</div>
+            }
+            if (errorString == "b")
+            {
+                <div>При регистрации произошла ошибка. Возможно, данный пользователь уже существует.</div>
+            }
+
+            <div><a href="~/">На главную</a></div>
+        }
+    </div>

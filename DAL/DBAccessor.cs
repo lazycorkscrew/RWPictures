@@ -27,6 +27,49 @@ namespace RWPictures.DAL
             }
         }
 
+        public bool AddUser(string login, string password, string fname, string lname, string patronymic)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("AddUser", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@login", login);
+                command.Parameters.AddWithValue("@password", password);
+                command.Parameters.AddWithValue("@fname", fname);
+                command.Parameters.AddWithValue("@lname", lname);
+                command.Parameters.AddWithValue("@patronymic", patronymic);
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
+        public bool ApplyImageToPattern(int imageId, string pattern)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("ApplyImageToPattern", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@image_id", imageId);
+                command.Parameters.AddWithValue("@pattern", pattern);
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
+        public bool AttachFieldToImage(int imageId, string field, string value)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("AttachFieldToImage", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@image_id", imageId);
+                command.Parameters.AddWithValue("@field_name", field);
+                command.Parameters.AddWithValue("@field_value", value);
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
         public bool AttachImageToDocument(int docId, byte[] image)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -120,6 +163,102 @@ namespace RWPictures.DAL
             }
         }
 
+        public IEnumerable<Field> GetFirstImageFieldsForCheck(int checkerId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetFirstImageFieldsForCheck", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@checker_id", checkerId);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                List<Field> fields = new List<Field>();
+                while (reader.Read())
+                {
+                    fields.Add(new Field { Name = (string)reader["field_name"], Value = (string)reader["field_value"] });
+                }
+
+                return fields;
+            }
+        }
+
+        public byte[] GetImageById(int imageId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetImageById", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@image_id", imageId);
+                connection.Open();
+                SqlDataReader reader = null;
+                reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return (byte[])reader["Image"];
+                }
+
+                return null;
+            }
+        }
+
+        public IEnumerable<string> GetImageFields(int docId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetImageFields", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@doc_id", docId);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                List<string> fields = new List<string>();
+                while (reader.Read())
+                {
+                    fields.Add((string)reader["FieldName"]);
+                }
+
+                return fields;
+            }
+        }
+
+        public int GetImageIdForCheck(int checkerId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetImageIdForCheck", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@checker_id", checkerId);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    return (int)reader["Id"];
+                }
+
+                return 0;
+            }
+        }
+
+        public LinkImageDoc GetImageIdForWork(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetImageIdForWork", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@user_id", userId);
+                connection.Open();
+                SqlDataReader reader = null;
+                reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new LinkImageDoc { ImageId = (int)reader["id"], DocumentId = (int)reader["doc_id"] };
+                }
+
+                return null;
+            }
+        }
+
         public Dictionary<int, string> GetPatternFields(string pattern)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -136,6 +275,67 @@ namespace RWPictures.DAL
                 }
 
                 return patterns;
+            }
+        }
+
+        public User GetUserByLoginAndPass(string login, string password)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("GetUserByLoginAndPass", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@login", login);
+                command.Parameters.AddWithValue("@password", password);
+                connection.Open();
+                SqlDataReader reader = null;
+                try
+                {
+                    reader = command.ExecuteReader();
+                }
+                catch (SqlException ex)
+                {
+                    return null;
+                }
+
+                if (reader.Read())
+                {
+                    return new User
+                    {
+                        Id = (int)reader["Id"],
+                        Fname = (string)reader["Fname"],
+                        Lname = (string)reader["Lname"],
+                        Patronymic = (string)reader["Patronymic"],
+                        Description = reader.IsDBNull(4) ? null : (string)reader["Description"],
+                        Rights = (int)reader["Rights"]
+                    };
+                }
+
+                return null;
+            }
+        }
+
+        public bool MoveImageToCheck(int imageId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("MoveImageToCheck", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@image_id", imageId);
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
+            }
+        }
+
+        public bool RemovePattern(string pattern)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand("RemovePattern", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@pattern_name", pattern);
+                connection.Open();
+                bool a = command.ExecuteNonQuery() >= 1;
+                return a;
             }
         }
 

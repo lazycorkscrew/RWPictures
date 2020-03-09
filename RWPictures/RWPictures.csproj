@@ -91,18 +91,32 @@
     <Content Include="Content\styles.css" />
     <Content Include="Commands\DocumentsUploader.cshtml" />
     <None Include="Layouts\_MainLayout.cshtml" />
+    <Content Include="Pages\AuthForm.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\AuthForm.aspx.cs">
+      <DependentUpon>AuthForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\AuthForm.aspx.designer.cs">
+      <DependentUpon>AuthForm.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.cshtml" />
+    <Content Include="Layouts\_WorkflowLayout.cshtml" />
     <None Include="packages.config" />
     <Content Include="Pages\DocumentImage.cshtml" />
     <Content Include="Pages\DocumentsEditor.cshtml" />
     <Content Include="Pages\DocumentPage.cshtml" />
     <Content Include="Pages\PatternsEditor.cshtml" />
+    <Content Include="Pages\MenuPage.cshtml" />
+    <Content Include="Pages\WorkFlow.cshtml" />
+    <Content Include="Pages\Registration.cshtml" />
+    <Content Include="Pages\ImageFinisher.cshtml" />
+    <Content Include="Pages\Checker.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

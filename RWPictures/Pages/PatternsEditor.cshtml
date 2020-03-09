@@ -1,7 +1,7 @@
 ﻿@using RWPictures.Entities;
 @using RWPictures.PL;
 @{
-    Layout = null;
+    Layout = "~/Layouts/_MainLayout.cshtml";
 
     string pattern = Request["pattern"];
 
@@ -14,25 +14,39 @@
         {
             switch (act)
             {
-                case "remove_field":
-                    {
-                        if (!int.TryParse(Request["id"], out int id) & !LogicProvider.Logic.RemovePatternField(pattern, id))
-                        {
-                            <div>Что-то пошло не так с удалением.</div>
-                        }
-
-                        break;
-                    }
                 case "add_field":
                     {
                         string fieldName = Request["field_name"];
-                        if (string.IsNullOrEmpty(fieldName) & !LogicProvider.Logic.AddFieldToPattern(pattern, fieldName))
+                        if (string.IsNullOrEmpty(fieldName) || !LogicProvider.Logic.AddFieldToPattern(pattern, fieldName))
                         {
-                            <div>Что-то пошло не так с добавлением.</div>
+                            <div>Что-то пошло не так с добавлением поля шаблона.</div>
                         }
 
                         break;
                     }
+
+                case "remove_field":
+                    {
+                        if (!int.TryParse(Request["id"], out int id) || !LogicProvider.Logic.RemovePatternField(pattern, id))
+                        {
+                            <div>Что-то пошло не так с удалением поля шаблона.</div>
+                        }
+
+                        break;
+                    }
+                case "remove_pattern":
+                    {
+                        if (!LogicProvider.Logic.RemovePattern(pattern))
+                        {
+                            <div>Что-то пошло не так с удалением шаблона.</div>
+                        }
+                        else
+                        {
+                            Response.Redirect("~/Pages/PatternsEditor.cshtml");
+                        }
+                        break;
+                    }
+
 
                 default: break;
             }
@@ -44,10 +58,11 @@
         {
             <p>@field.Value <a href="~/Pages/PatternsEditor.cshtml?pattern=@pattern&act=remove_field&id=@field.Key">Удалить</a></p>
         }
-            <form action="~/Pages/PatternsEditor.cshtml?pattern=@pattern&act=add_field" method="get">
-                <input type="text" name="field_name" />
-                <button>Добавить</button>
-            </form>
+        <form action="~/Pages/PatternsEditor.cshtml?act=add_field" method="post">
+            <input type="text" name="field_name" />
+            <input type="hidden" name="pattern" value="@pattern" />
+            <button>Добавить</button>
+        </form>
 
     }
     else
@@ -55,12 +70,18 @@
 
         string[] patterns = LogicProvider.Logic.GetAllPatterns().ToArray();
 
-            <div>
-                @for (int i = 0; i < patterns.Length; i++)
-                {
-                    <p><a href="~/Pages/PatternsEditor.cshtml?pattern=@patterns[i]">@patterns[i]</a></p>
-                }
-            </div>
-
-        }
+        <div>
+            @for (int i = 0; i < patterns.Length; i++)
+            {
+                <p>
+                    <a href="~/Pages/PatternsEditor.cshtml?pattern=@patterns[i]">@patterns[i]</a> 
+                    <a href="~/Pages/PatternsEditor.cshtml?act=remove_pattern&pattern=@patterns[i]">Удалить</a>
+                </p>
+            }
+        </div>
+        <form action="~/Pages/PatternsEditor.cshtml" method="post">
+            <input type="text" name="pattern" />
+            <button>Добавить шаблон</button>
+        </form>
     }
+}

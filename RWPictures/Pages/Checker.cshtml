@@ -1,0 +1,32 @@
+﻿@using RWPictures.Entities;
+@using RWPictures.PL;
+@{
+    Layout = "~/Layouts/_WorkflowLayout.cshtml";
+
+    User user = Session["user"] as User;
+
+    if (user != null)
+    {
+        List<Field> fields = LogicProvider.Logic.GetFirstImageFieldsForCheck(user.Id) as List<Field>;
+        int fieldsCount = fields.Count;
+        int imageId = LogicProvider.Logic.GetImageIdForCheck(user.Id);
+
+        <div>
+            <div class="workflow_left">
+                <img src="~/Pages/DocumentImage.cshtml?id=@imageId" />
+            </div>
+            <div class="workflow_right">
+
+                <input type="hidden" name="image_id" value="@imageId" />
+                @for (int i = 0; i < fieldsCount; i++)
+                {
+            <p>@fields[i].Name: @fields[i].Value</p>
+                }
+            <form action="~/Pages/Checker.cshtml" method="post">
+                <button name="confirm" value="1">Утвердить</button>
+                <button name="confirm" value="0">Попросить исправить</button>
+            </form>
+            </div>
+        </div>
+    }
+}

@@ -1,6 +1,32 @@
 ﻿body {
 }
 
+.pattern {
+    width:90%;
+    margin: 0 auto;
+}
+
+.pattern_header {
+    width: 100%;
+    height: 100px;
+    background-color: #E0E0FF;
+}
+
+.pattern_left {
+    background-color: #EEEEFF;
+    display: inline-block;
+    float: left;
+    width: 20%;
+    min-height: 600px;
+}
+
+.pattern_right {
+
+    display: inline-block;
+    width: 80%;
+    min-height: 600px;
+}
+
 .documents {
 
 }
@@ -46,4 +72,24 @@
 
 .document_create > div > div > a {
     /*background-color: red;*/
+}
+
+.workflow_left {
+    background-color: green;
+    background-color: #EEEEFF;
+    display: inline-block;
+    float: left;
+    width: 60%;
+    min-height: 600px;
+}
+
+.workflow_left img {
+    width: 100%;
+}
+
+.workflow_right {
+    background-color: red;
+    display: inline-block;
+    width: 40%;
+    min-height: 600px;
 }

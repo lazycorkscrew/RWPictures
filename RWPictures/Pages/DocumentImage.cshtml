@@ -8,13 +8,17 @@
     Layout = null;
     Response.ContentType = "image/gif";
 
-
-    byte[] picture = LogicProvider.Logic.GetImageFromFile("~/Documents/3.pdf");
-
-    if (picture != null)
+    if (int.TryParse( Request["id"], out int id))
     {
-        Response.BinaryWrite(picture);
+        byte[] picture = LogicProvider.Logic.GetImageById(id);
+
+        if (picture != null)
+        {
+            Response.BinaryWrite(picture);
+        }
     }
+
+    
 }
 
 

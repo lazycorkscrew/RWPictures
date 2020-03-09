@@ -1,0 +1,29 @@
+﻿@using RWPictures.Entities;
+@using RWPictures.PL;
+@{
+    Layout = null;
+
+    int i = 0;
+    if(int.TryParse(Request["image_id"], out int imageId))
+    {
+        while (Request[$"field[{i}]"] != null && Request[$"value[{i}]"] != null)
+        {
+            if (!LogicProvider.Logic.AttachFieldToImage(imageId, Request[$"field[{i}]"], Request[$"value[{i}]"]))
+            {
+                break;
+            }
+
+            i++;
+        }
+
+        if (LogicProvider.Logic.MoveImageToCheck(imageId))
+        {
+            Response.Redirect("~/Pages/WorkFlow.cshtml");
+        }
+    }
+
+
+
+
+
+}

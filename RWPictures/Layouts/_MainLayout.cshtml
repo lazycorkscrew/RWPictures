@@ -1,4 +1,32 @@
-﻿<!DOCTYPE html>
+﻿@using RWPictures.PL;
+@using RWPictures.Entities;
+@{
+    Layout = null;
+
+
+
+    User user = Session["user"] as User;
+    if(user == null)
+    {
+        string login = Request?.Cookies["login"]?.Value;
+        string password = Request?.Cookies["password"]?.Value;
+
+        user = LogicProvider.Logic.GetUserByLoginAndPass(login, password);
+
+        if(user != null)
+        {
+            Session["user"] = user;
+        }
+        else
+        {
+            Response.Redirect("~/Pages/AuthForm.aspx");
+        }
+
+
+    }
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,6 +34,16 @@
     <link rel="stylesheet" type="text/css" href="~/Content/styles.css">
 </head>
 <body>
-    @RenderBody()
+    <div class="pattern">
+        <div>
+            <div class="pattern_header">Хедер</div>
+            <div class="pattern_left">
+                @RenderPage("~/Pages/MenuPage.cshtml")
+            </div>
+            <div class="pattern_right">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
 </body>
 </html>
